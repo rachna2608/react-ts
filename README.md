@@ -2,7 +2,7 @@
 
 This is the main container application built with Vite + React. It consumes and renders two separately deployed micro frontends (MFEs) using Module Federation via @originjs/vite-plugin-federation.
 
-This container uses Module Federation to dynamically load and render React components from the two MFEs at runtime. Each MFE is independently deployed and versioned, enabling modular development and faster deployments.
+It uses Module Federation to dynamically load and render React components from the two MFEs at runtime. Each MFE is independently deployed and versioned, enabling modular development and faster deployments.
 
 
 
