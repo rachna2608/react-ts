@@ -1,54 +1,51 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the main container application built with Vite + React. It consumes and renders two separately deployed micro frontends (MFEs) using Module Federation via @originjs/vite-plugin-federation.
 
-Currently, two official plugins are available:
+This container uses Module Federation to dynamically load and render React components from the two MFEs at runtime. Each MFE is independently deployed and versioned, enabling modular development and faster deployments.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+🔗 Microfrontends Consumed
+Microfrontend	Port	Description
+investor-list-mfe	3001	Displays a table of investors
+commitment-breakdown-mfe	3002	Shows a breakdown of investor commitments
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Backend API
+A .NET Core Web API provides the data consumed by both MFEs.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+API Endpoints
+Swagger UI: http://localhost:5288/swagger/index.html
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+Get all investors: http://localhost:5288/api/investors
+
+Get commitments by investor ID:
+http://localhost:5288/api/investors/1/commitments
+
+Filter commitments by asset class:
+http://localhost:5288/api/investors/1/commitments?assetClass=Hedge%20Funds
+
+
+How to Run main app
+Make sure all three apps are built and running before starting the container.
+
+1. Start investor-list-mfe
+
+cd ../investor-list-mfe
+npm install
+npm run build
+npm run preview -- --port 3001
+2. Start commitment-breakdown-mfe
+
+cd ../commitment-breakdown-mfe
+npm install
+npm run build
+npm run preview -- --port 3002
+3. Start Main Container
+
+cd main-container/react-ts
+npm install
+npm run build
+npm run preview
+Visit: http://localhost:4173
